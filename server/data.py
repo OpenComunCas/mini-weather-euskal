@@ -60,9 +60,8 @@ class DaoMedidas(object):
         query = """
                CREATE TABLE IF NOT EXISTS {0} (
                id INTEGER PRIMARY KEY AUTOINCREMENT,
-               soil INTEGER,
                temp NUMERIC,
-               light INTEGER,
+               hum NUMERIC,
                timestamp text NOT NULL
                );
                """.format(self.__table__)
@@ -73,8 +72,8 @@ class DaoMedidas(object):
 
     def insertar(self,json):
         timestamp = datetime.now()
-        query = "INSERT INTO "+self.__table__+" (soil,temp,light,timestamp) VALUES (?,?,?,?)"
-        params =(json["soil"],json["temp"],json["light"],str(timestamp))
+        query = "INSERT INTO "+self.__table__+" (temp,hum,timestamp) VALUES (?,?,?)"
+        params =(json["temp"],json["hum"],str(timestamp))
         with Conexion() as ctx:
             ctx.execute(query,params)
             ctx.commit()
@@ -92,7 +91,6 @@ class DaoMedidas(object):
         query= "SELECT * FROM {0} where id = (select max(id) from {0})".format(self.__table__)
         with Conexion() as ctx:
             data = ctx.execute(query)
-            print data
             if data is not None:
                 return  dict(data[0])
         return None

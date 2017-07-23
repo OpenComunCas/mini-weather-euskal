@@ -25,7 +25,7 @@ class Worker(threading.Thread):
 
     def get_msg(self):
         if self.source == 'serial':
-            msg = ser.readline().decode()[:-2]
+            msg = self.ser.readline().decode()[:-2]
         if self.source == 'mock':
             time.sleep(5)
             self.generate_rnd_msg()
@@ -34,7 +34,7 @@ class Worker(threading.Thread):
         
     def get_data(self):
         if self.source == 'serial':
-            data = ser.readline().decode()[:-2] 
+            data = self.ser.readline().decode()[:-2] 
         if self.source == 'mock':
             data = self.rnd_msg['data']
         return data
@@ -48,7 +48,7 @@ class Worker(threading.Thread):
         
         if self.source == 'serial':
             self.port = input("Serial port: ")
-            self.ser = serial.Serial("/dev/tty"+port, 9600)
+            self.ser = serial.Serial("/dev/tty"+self.port, 9600)
             
         while True:
             msg = self.get_msg()
